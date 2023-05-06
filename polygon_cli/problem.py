@@ -681,11 +681,15 @@ class ProblemSession:
                         if tutorial_content == '':
                             tutorial_content = document_file.read()
                             self.send_api_request('problem.saveGeneralTutorial', {'tutorial': tutorial_content})
-        for statement_node in problem_node.find('statements').findall('statement'):
-            if not statement_node.attrib['type'].endswith('tex'):
-                continue
-            self.save_statement_from_file(os.path.join(directory, statement_node.attrib['path']),
-                                          statement_node.attrib['charset'], statement_node.attrib['language'])
+                            
+        statements = problem_node.find('statements')
+        
+        if statements is not None:
+            for statement_node in problem_node.find('statements').findall('statement'):
+                if not statement_node.attrib['type'].endswith('tex'):
+                    continue
+                self.save_statement_from_file(os.path.join(directory, statement_node.attrib['path']),
+                                              statement_node.attrib['charset'], statement_node.attrib['language'])
         assets_node = problem_node.find('assets')
         for solution_node in assets_node.find('solutions').findall('solution'):
             xml_tag_to_api_tag = {'accepted': 'OK',
